@@ -1,12 +1,11 @@
 #ifndef FILESDATAS_H
 #define FILESDATAS_H
 
-#endif // FILESDATAS_H
+
 
 #include <QDomComment>
 #include <QVector>
-#include <QFileInfo>
-
+#include "datadefine.h"
 class Filedatas
 {
 
@@ -18,7 +17,7 @@ public:
     struct File_infos
     {
         short int Root_deep = 0;
-        QVector<QFileInfo> file_info;
+        QVector<fileInfo> file_info;
 
     };
 
@@ -27,3 +26,5 @@ public:
     void Read_fileinfo_Loacal();
 
 };
+
+#endif // FILESDATAS_H

@@ -17,47 +17,21 @@
    <string>文件操作</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="Btn_open">
-    <property name="geometry">
-     <rect>
-      <x>850</x>
-      <y>60</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>选择文件夹</string>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="lineDir">
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>60</y>
+      <y>30</y>
       <width>300</width>
       <height>20</height>
      </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="Btn_snap">
-    <property name="geometry">
-     <rect>
-      <x>850</x>
-      <y>110</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>扫描文件夹</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>60</y>
+      <y>30</y>
       <width>71</width>
       <height>30</height>
      </rect>
@@ -70,7 +44,7 @@
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>160</y>
+      <y>90</y>
       <width>71</width>
       <height>30</height>
      </rect>
@@ -83,7 +57,7 @@
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>170</y>
+      <y>90</y>
       <width>300</width>
       <height>20</height>
      </rect>
@@ -93,7 +67,7 @@
     <property name="geometry">
      <rect>
       <x>850</x>
-      <y>170</y>
+      <y>90</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -105,8 +79,8 @@
    <widget class="QPushButton" name="Btn_start">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>230</y>
+      <x>830</x>
+      <y>150</y>
       <width>71</width>
       <height>81</height>
      </rect>
@@ -118,8 +92,8 @@
    <widget class="QLabel" name="label_status">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>20</y>
+      <x>520</x>
+      <y>0</y>
       <width>351</width>
       <height>31</height>
      </rect>
@@ -136,6 +110,9 @@
       <width>431</width>
       <height>431</height>
      </rect>
+    </property>
+    <property name="contextMenuPolicy">
+     <enum>Qt::CustomContextMenu</enum>
     </property>
     <column>
      <property name="text">
@@ -216,7 +193,7 @@
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>150</y>
+      <y>70</y>
       <width>291</width>
       <height>16</height>
      </rect>
@@ -225,10 +202,238 @@
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="Btn_check">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>360</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>查看文件信息</string>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>130</y>
+      <width>118</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>130</y>
+      <width>71</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>操作进度</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>30</y>
+      <width>77</width>
+      <height>54</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="Btn_open">
+       <property name="text">
+        <string>选择文件夹</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Btn_snap">
+       <property name="text">
+        <string>扫描文件夹</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="Btn_check_3">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>160</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>查看文件信息</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>439</x>
+      <y>200</y>
+      <width>351</width>
+      <height>211</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>快捷功能</string>
+    </property>
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>301</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="page">
+      <widget class="QPushButton" name="Btn_check_2">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>80</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>查看文件信息</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="page_2">
+      <widget class="QComboBox" name="comboBox">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>60</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string>自定义命名规则</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>根据父目录重命名</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>名称精简</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+      </widget>
+      <widget class="QCheckBox" name="cB_rename">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>60</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>批量重命名</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="cB_move">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>110</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>批量移动整理</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="cB_join">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>110</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>文件合并</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>281</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="minimumSize">
+           <size>
+            <width>71</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>71</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>自定义规则：</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="line_rename"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
    <zorder>layoutWidget</zorder>
-   <zorder>Btn_open</zorder>
+   <zorder>layoutWidget</zorder>
    <zorder>lineDir</zorder>
-   <zorder>Btn_snap</zorder>
    <zorder>label</zorder>
    <zorder>label_2</zorder>
    <zorder>lineDir_Save</zorder>
@@ -237,6 +442,11 @@
    <zorder>label_status</zorder>
    <zorder>treeWidget_file</zorder>
    <zorder>label_save_status</zorder>
+   <zorder>Btn_check</zorder>
+   <zorder>progressBar</zorder>
+   <zorder>label_5</zorder>
+   <zorder>Btn_check_3</zorder>
+   <zorder>groupBox</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

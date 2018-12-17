@@ -3,6 +3,7 @@
 #include "ui_myfile.h"
 #include <QDebug>
 #include <QFileInfo>
+//#include <QStackedWidget>
 #include <QAbstractItemView>
 
 Myfile::Myfile(QWidget *parent) :
@@ -26,11 +27,6 @@ Myfile::Myfile(QWidget *parent) :
 
     InitTreeWidget();
     Init();
-
-    connect(ui->lineDir,SIGNAL(editingFinished()),this,SLOT(path_check()));
-
-
-    item_std_model = new QTreeWidgetItem;
 }
 
 Myfile::~Myfile()
@@ -42,13 +38,20 @@ Myfile::~Myfile()
 
 void Myfile::InitTreeWidget()
 {
+	current_menuItem = new QTreeWidgetItem;
+	delete_Itme = menu.addAction("删除该项");
+	rename_Item = menu.addAction("重命名.");
+	connect(delete_Itme,&QAction::triggered,this,&Myfile::slot_tree_Widget_delItem);
+	connect(rename_Item,&QAction::triggered,this,&Myfile::slot_tree_Widget_rename);
 
-    connect(ui->treeWidget_file,SIGNAL(itemClicked(QTreeWidgetItem*,int)),this,SLOT(tree_Widget_click(QTreeWidgetItem*,int)));
 }
 
 void Myfile::Init()
 { 
-	//ui->treeWidget_file->setSelectionMode(QAbstractItemView::MultiSelection);
+	connect(ui->lineDir, SIGNAL(editingFinished()), this, SLOT(path_check()));
+	//ui->stackedWidget->currentIndex();
+	ui->stackedWidget->setCurrentIndex(1);
+	
 }
 void Myfile::updateParentItem(QTreeWidgetItem *item)
 {
@@ -98,48 +101,24 @@ void Myfile::click_treeitem()
 
 
 
-void Myfile::tree_Widget_menu(const QPoint& pt_menu)
+void Myfile::slot_tree_Widget_delItem()
 {
-    qDebug()<<"右键菜单";
-    QTreeWidgetItem *curItem = ui->treeWidget_file->currentItem();
-    //if(!curItem){return;}
-    QMenu menu;
-    QAction * delete_Itme = menu.addAction(QStringLiteral("删除该项"));
-    QAction * rename_Item = menu.addAction("重命名.");
-    connect(delete_Itme, SIGNAL(triggered()), this, SLOT(tree_Widget_delItem()));
-    connect(rename_Item,SIGNAL(triggered(bool)),this,SLOT(tree_Widget_rename()));
-    menu.exec(QCursor::pos());
+	qDebug() << current_menuItem;
+    ui->treeWidget_file->removeItemWidget(current_menuItem,0);
+
+	//_Vec_file_Info.removeAt(List_items.indexOf(current_menuItem));
+	//List_items.removeAt(List_items.indexOf(current_menuItem));
+    delete current_menuItem;
+
 
 }
 
-void Myfile::tree_Widget_delItem()
+void Myfile::slot_tree_Widget_rename()
 {
-    qDebug()<<"this is del";
-
-    //ui->treeWidget_file->currentItem()->removeChild(ui->treeWidget_file->currentItem());
-    ui->treeWidget_file->removeItemWidget(del_item,0);
-    delete del_item;
-    qDebug()<<del_item;
-
+	qDebug() << "重命名";
 }
 
-void Myfile::tree_Widget_rename()
-{
-    qDebug()<<"this is rename";
-}
 
-void Myfile::slot_test(const QPoint &pt_test)
-{
-    qDebug()<<"this is a pt_test program";
-    QTreeWidgetItem * item = ui->treeWidget_file->currentItem();
-    if (!item){ return; }
-
-        QMenu menu;
-        QAction * action = menu.addAction("123");
-        connect(action, SIGNAL(triggered()), this, SLOT(slot_delete_organ_sign()));
-        menu.exec(QCursor::pos());
-
-}
 
 void Myfile::on_Btn_open_clicked()
 {
@@ -159,6 +138,10 @@ void Myfile::on_Btn_snap_clicked()
     }
     else {
         ui->label_status->setText(tr("扫描中…………."));
+		ui->treeWidget_file->clear();
+		List_items.clear();
+		_Vec_file_Info.clear();
+        file_count =0;
         add_treeWidget_file(path,nullptr,true);
         ui->label_status->setText(tr("扫描完毕！"));
     }
@@ -184,6 +167,9 @@ void Myfile::add_treeWidget_item(const QFileInfo _FileInfo, QTreeWidgetItem *_it
     //_item->setFlags(Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable);
     _item->setCheckState(0,Qt::Unchecked);
     _item->setText(0,_FileInfo.fileName());
+
+	
+
     if(isFile)
     {
 		if (file_size > 1024)
@@ -212,59 +198,68 @@ void Myfile::add_treeWidget_item(const QFileInfo _FileInfo, QTreeWidgetItem *_it
 
 void Myfile::add_treeWidget_file(const QDir _dir,  QTreeWidgetItem *_parent_item, bool isRooot)
 {
+    file_count++;
     QFileInfoList list=_dir.entryInfoList();
-    list = list.mid(2,-1);
-    //qDebug()<<list<<list.length();
-    QString str_file_size;
-    qint64 file_size;
-    for(int i=0;i<list.length();i++)
+    if(list.size()!=2)
     {
-        QFileInfo fileinfo=list.at(i);
-        file_size = fileinfo.size();
-        str_file_size = tr("%1").arg(file_size);
-
-        QTreeWidgetItem *_item;
-        if(fileinfo.isFile())
+        list = list.mid(2,-1);
+        qDebug()<<file_count<<": "<<list.size();
+        for(int i=0;i<list.length();i++)
         {
-            if(_parent_item != nullptr)
+            QFileInfo fileinfo=list.at(i);
+
+            QTreeWidgetItem *_item;
+            if(fileinfo.isFile())
             {
-                _item =new QTreeWidgetItem(_parent_item);
-                add_treeWidget_item(fileinfo,_item,true);
-//                _item->setText(0,fileinfo.fileName());
-//                _item->setText(1,fileinfo.suffix());
-//                _item->setText(2,str_file_size);
-            }else
+                if(_parent_item != nullptr)
+                {
+                    Root_num ++;
+                    _item =new QTreeWidgetItem(_parent_item);
+                    add_treeWidget_item(fileinfo,_item,true);
+                    add_filo_infos(fileinfo,_item, false, Root_num);
+                    List_items.append(_item);
+
+                }else
+                {
+                    Root_num = 1;
+                    _item=new QTreeWidgetItem(ui->treeWidget_file);
+                    add_treeWidget_item(fileinfo,_item,true);
+                    add_filo_infos(fileinfo, _item, true, Root_num);
+                    List_items.append(_item);
+                }
+
+            }else if(fileinfo.isDir())
             {
-                _item=new QTreeWidgetItem(ui->treeWidget_file);
-                add_treeWidget_item(fileinfo,_item,true);
-//                _item->setCheckState(0,Qt::Unchecked);
-//                _item->setText(0,fileinfo.fileName());
-//                _item->setText(1,fileinfo.suffix());
-//                _item->setText(2,str_file_size);
+                if(isRooot)
+                {
+                    Root_num = 1;
+                    _item = new QTreeWidgetItem(ui->treeWidget_file);
+                    add_treeWidget_item(fileinfo,_item,false);
+                    add_treeWidget_file(fileinfo.absoluteFilePath(),_item,false);
+                    add_filo_infos(fileinfo, _item, true, Root_num);
+                    List_items.append(_item);
+                }else
+                {
+                    Root_num++;
+                    _item = new QTreeWidgetItem(_parent_item);
+                    add_treeWidget_item(fileinfo,_item,false);
+                    add_treeWidget_file(fileinfo.absoluteFilePath(),_item,false);
+                    add_filo_infos(fileinfo, _item, false, Root_num);
+                    List_items.append(_item);
+                }
             }
-
-        }else if(fileinfo.isDir())
-        {
-            if(isRooot)
-            {
-                _item = new QTreeWidgetItem(ui->treeWidget_file);
-//                _item->setText(0,fileinfo.fileName());
-//                _item->setText(1,"目录");
-                add_treeWidget_item(fileinfo,_item,false);
-                add_treeWidget_file(fileinfo.absoluteFilePath(),_item,false);
-            }else
-            {
-                _item = new QTreeWidgetItem(_parent_item);
-//                _item->setText(0,fileinfo.fileName());
-//                _item->setText(1,"目录");
-                add_treeWidget_item(fileinfo,_item,false);
-                add_treeWidget_file(fileinfo.absoluteFilePath(),_item,false);
-            }
-
-
         }
     }
 
+}
+
+void Myfile::add_filo_infos(QFileInfo _fileinfo_form, QTreeWidgetItem * _my_item, bool _isRoot, int _root_num)
+{
+	_fileInfo._form_fileinfo = _fileinfo_form;
+    _fileInfo._QtreeWidgetItem = _my_item;
+	_fileInfo._isRoot = _isRoot;
+	_fileInfo._root_num = _root_num;
+	_Vec_file_Info.append(_fileInfo);
 }
 
 void Myfile::_save_setting_check()
@@ -331,7 +326,9 @@ void Myfile::on_Btn_start_clicked()
 
 void Myfile::on_treeWidget_file_customContextMenuRequested(const QPoint &pos)
 {
-    qDebug()<<pos.x();
+	current_menuItem = ui->treeWidget_file->currentItem();
+    if(!current_menuItem){return;}
+	menu.exec(QCursor::pos());
 }
 
 void Myfile::on_treeWidget_file_itemChanged(QTreeWidgetItem *item, int column)
@@ -340,7 +337,7 @@ void Myfile::on_treeWidget_file_itemChanged(QTreeWidgetItem *item, int column)
     //选中时
     if(Qt::Checked==item->checkState(0))
     {
-        QTreeWidgetItem* parent=item->parent();
+        //QTreeWidgetItem* parent=item->parent();
         int count=item->childCount();
         if(count>0)
         {
@@ -373,4 +370,39 @@ void Myfile::on_treeWidget_file_itemChanged(QTreeWidgetItem *item, int column)
         }
 
     }
+}
+
+void Myfile::on_Btn_check_pressed()
+{
+	QList<QTreeWidgetItem*> selected_items ;
+	int List_size = List_items.size();
+	for (int coulum = 0; coulum < List_size; coulum++)
+	{
+		if (List_items.at(coulum)->checkState(0) == Qt::Checked)
+		{
+			selected_items.append(List_items.at(coulum));
+		}
+	}
+	int current_clolun = 0;
+	for (;current_clolun<selected_items.size();current_clolun++)
+	{
+        int find_item = List_items.indexOf(selected_items.at(current_clolun));
+        qDebug() << _Vec_file_Info.at(find_item)._form_fileinfo.fileName() << ": " << _Vec_file_Info.at(find_item)._form_fileinfo.absoluteFilePath();
+	}
+}
+
+
+void Myfile::on_cB_rename_stateChanged(int arg1)
+{
+	
+}
+
+void Myfile::on_cB_join_stateChanged(int arg1)
+{
+
+}
+
+void Myfile::on_cB_move_stateChanged(int arg1)
+{
+
 }

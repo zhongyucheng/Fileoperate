@@ -33,7 +33,8 @@ SOURCES += \
 HEADERS += \
         myfile.h \
     common.h \
-    filesdatas.h
+    filesdatas.h \
+    datadefine.h
 
 FORMS += \
         myfile.ui

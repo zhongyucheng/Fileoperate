@@ -8,11 +8,13 @@
 #include <QDir>
 #include <QList>
 #include <QMessageBox>
-#include <QFileInfo>
+#include <QMenu>
 //#include <QDirModel>
 #include <QFileSystemModel>
-#include <QTreeWidgetItem>
+//#include <QTreeWidgetItem>
 #include <QSettings>
+
+#include "datadefine.h"
 
 #define _CONFIG_FILE_			"/config.ini"
 
@@ -27,6 +29,8 @@ class Myfile : public QMainWindow
 public:
     explicit Myfile(QWidget *parent = nullptr);
     ~Myfile();
+
+	
 
 protected:
     void InitTreeWidget();
@@ -44,13 +48,9 @@ private slots:
 
     void click_treeitem();
 
+    void slot_tree_Widget_delItem();
 
-    void tree_Widget_menu(const QPoint& pt_menu);
-
-    void tree_Widget_delItem();
-    void tree_Widget_rename();
-
-    void slot_test(const QPoint& pt_test);
+    void slot_tree_Widget_rename();
 
     void on_Btn_Save_clicked();
 
@@ -61,6 +61,14 @@ private slots:
     void on_treeWidget_file_customContextMenuRequested(const QPoint &pos);
 
     void on_treeWidget_file_itemChanged(QTreeWidgetItem *item, int column);
+	void on_Btn_check_pressed();
+
+
+    void on_cB_rename_stateChanged(int arg1);
+
+    void on_cB_join_stateChanged(int arg1);
+
+    void on_cB_move_stateChanged(int arg1);
 
 private:
     Ui::Myfile *ui;
@@ -71,24 +79,26 @@ private:
         QString _save_path;
         int _version;
     };
-    struct fileInfo
-    {
-        QFileInfo form_fileinfo;
-        QTreeWidgetItem *_parent;
-        bool isRoot;
-    };
-    path_info _setting_path_info;
 
-    QTreeWidgetItem *item_std_model;
+    QList<QTreeWidgetItem*> List_items;
+	int Root_num = 0;
+    path_info _setting_path_info;
+	fileInfo _fileInfo;
+	QVector<fileInfo> _Vec_file_Info;
     QTreeWidgetItem *item_current;
     QTreeWidgetItem *del_item;
-
+	//菜单
+	QTreeWidgetItem *current_menuItem;
+	QMenu menu;
+	QAction * delete_Itme;
+	QAction * rename_Item;
     //------------
 
+    int file_count ;
     void add_dir();
     void add_treeWidget_item(const QFileInfo _FileInfo, QTreeWidgetItem *_item,bool isFile );
-
     void add_treeWidget_file(const QDir _dir, QTreeWidgetItem *_parent_item,bool isRooot);
+    void add_filo_infos(QFileInfo _fileinfo_form,QTreeWidgetItem *_my_item,bool _isRoot,int _root_num);
 
 
 //析构存储
